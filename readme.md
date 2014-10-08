@@ -4,7 +4,7 @@
 npm install bunyan-request --save
 ```
 
-Request, response logger middleware using [bunyan](https://github.com/trentm/node-bunyan):
+Request, response logger middleware for [bunyan](https://github.com/trentm/node-bunyan):
 - log request as `req`
 - log response as `res`
 - log request<>response duration in milliseconds as `duration`
