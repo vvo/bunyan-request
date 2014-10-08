@@ -4,8 +4,9 @@ Request, response logger middleware using [bunyan](https://github.com/trentm/nod
 - log request as `req`
 - log response as `res`
 - log request<>response duration in milliseconds as `duration`
-- creates, use and forward to response the `x-request-id` request header: get it if present, create it otherwise
-- provides `req.log` as an id-specialized logger for you to track your request in your entire application
+- creates, use and forward to response the `x-request-id` request header: get it if present, create it otherwise ([uuid.v4()](https://github.com/defunctzombie/node-uuid#uuidv4options--buffer--offset))
+- log request id as `id`
+- provides `req.log` as an id-specialized logger for you to track your request in your entire application, every time you access the `request` object
 - compatible with pure [http server](http://nodejs.org/api/http.html#http_http_createserver_requestlistener), [express](https://github.com/strongloop/express), [connect](https://github.com/senchalabs/connect) and any http middleware system
 
 ![screenshot](screenshot.png)
