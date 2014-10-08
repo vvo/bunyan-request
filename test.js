@@ -13,6 +13,7 @@ var requestLogger;
 
 var server = http.createServer(function serve(req, res) {
   requestLogger(req, res, function next() {
+    req.log.info('Hello specialized!');
     res.end('ok');
   });
 });
@@ -23,7 +24,7 @@ server.on('listening', function() {
 
 request = request(server);
 
-test('request', function(t) {
+test('request, response', function(t) {
   var output = [];
   reset(output);
 
@@ -35,7 +36,7 @@ test('request', function(t) {
     .expect(200)
     .end(function gotResponse(err, res) {
       var requestLog = output[0];
-      var responseLog = output[1];
+      var responseLog = output[2];
 
       t.error(err, 'received a response from server');
 
@@ -57,6 +58,26 @@ test('request', function(t) {
         remoteAddress: '127.0.0.1',
         remotePort: requestLog.req.remotePort
       }, 'request log have the right `req` property');
+    });
+});
+
+test('specialized log', function(t) {
+  var output = [];
+  reset(output);
+
+  t.plan(4);
+
+  request
+    .get('/')
+    .set('x-request-id', '4000')
+    .expect(200)
+    .end(function gotResponse(err) {
+      var specializedLog = output[1];
+
+      t.error(err, 'received a response from server');
+      t.equal(specializedLog.msg, 'Hello specialized!');
+      t.equal(specializedLog.id, '4000');
+      t.equal(specializedLog.type, 'request');
     });
 });
 
@@ -102,7 +123,7 @@ test('duration', function(t) {
     .get('/')
     .expect(200)
     .end(function gotResponse(err) {
-      var responseLog = output[1];
+      var responseLog = output[2];
 
       t.error(err, 'received a response from server');
       t.equal(typeof responseLog.duration, 'number', '`duration` was set');
