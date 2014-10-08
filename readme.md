@@ -39,6 +39,7 @@ var requestLogger = bunyanRequest({
   headerName: 'x-request-id'
 });
 
+app.use(requestLogger);
 app.get('/', function(req, res) {
   // now use `req.log` as your request-specialized bunyan logger
   req.log.info('YO DAWG!');
