@@ -1,4 +1,5 @@
-# bunyan-request [![Build Status](http://img.shields.io/travis/vvo/bunyan-request/master.svg?style=flat-square)](https://travis-ci.org/vvo/bunyan-request) [![Dependency Status](http://img.shields.io/david/vvo/bunyan-request.svg?style=flat-square)](https://david-dm.org/vvo/bunyan-request) [![devDependency Status](http://img.shields.io/david/dev/vvo/bunyan-request.svg?style=flat-square)](https://david-dm.org/vvo/bunyan-request#info=devDependencies)
+# bunyan-request
+[![Build Status](http://img.shields.io/travis/vvo/bunyan-request/master.svg?style=flat-square)](https://travis-ci.org/vvo/bunyan-request) [![Dependency Status](http://img.shields.io/david/vvo/bunyan-request.svg?style=flat-square)](https://david-dm.org/vvo/bunyan-request) [![devDependency Status](http://img.shields.io/david/dev/vvo/bunyan-request.svg?style=flat-square)](https://david-dm.org/vvo/bunyan-request#info=devDependencies)
 
 ```shell
 npm install bunyan-request --save
