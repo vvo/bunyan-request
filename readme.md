@@ -15,6 +15,8 @@ Request, response logger middleware for [bunyan](https://github.com/trentm/node-
 - compatible with pure [http server](http://nodejs.org/api/http.html#http_http_createserver_requestlistener), [express](https://github.com/strongloop/express), [connect](https://github.com/senchalabs/connect) and any http middleware system
 - uses standard [bunyan serializers](https://github.com/trentm/node-bunyan#serializers)
 
+Here are the fields it creates, beautified with [`| bunyan`](https://github.com/trentm/node-bunyan#cli-usage) cli.
+
 ![screenshot](screenshot.png)
 
 ## Install
