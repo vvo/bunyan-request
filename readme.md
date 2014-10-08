@@ -1,8 +1,12 @@
 # bunyan-request [![Dependency Status](http://img.shields.io/david/vvo/bunyan-request.svg?style=flat-square)](https://david-dm.org/vvo/bunyan-request) [![devDependency Status](http://img.shields.io/david/dev/vvo/bunyan-request.svg?style=flat-square)](https://david-dm.org/vvo/bunyan-request#info=devDependencies)
 
-Request, response logger middleware using bunyan.
-
-Also provides request<>response duration in milliseconds.
+Request, response logger middleware using [bunyan](https://github.com/trentm/node-bunyan):
+- log request as `req`
+- log response as `res`
+- log request<>response duration in milliseconds as `duration`
+- creates, use and forward to response the `x-request-id` request header: get it if present, create it otherwise
+- provides `req.log` as an id-specialized logger for you to track your request in your entire application
+- compatible with pure [http server](http://nodejs.org/api/http.html#http_http_createserver_requestlistener), [express](https://github.com/strongloop/express), [connect](https://github.com/senchalabs/connect) and any http middleware system
 
 ![screenshot](screenshot.png)
 
@@ -13,10 +17,6 @@ npm install bunyan-request --save
 ```
 
 ## Usage
-
-Will use and forward `x-request-id` (case insensitive) header when present. Otherwise will generate
-a [uuid.v4()](https://github.com/defunctzombie/node-uuid#uuidv4options--buffer--offset) and
-add it to the response headers.
 
 ```js
 var bunyan = require('bunyan');
@@ -31,10 +31,19 @@ var requestLogger = bunyanRequest({
 });
 
 app.get('/', function(req, res) {
-  req.log('YO DAWG!');
+  // now use `req.log` as your request-specialized bunyan logger
+  req.log.info('YO DAWG!');
   res.send('ok');
 });
 ```
+
+## `x-request-id`
+
+Will use and forward `x-request-id` (case insensitive) header when present.
+
+Otherwise it will generate
+a [uuid.v4()](https://github.com/defunctzombie/node-uuid#uuidv4options--buffer--offset) and
+add it to the response headers.
 
 ## Example
 
