@@ -12,6 +12,7 @@ Request, response logger middleware using [bunyan](https://github.com/trentm/nod
 - log request id as `id`
 - provides `req.log` as an id-specialized logger for you to track your request in your entire application, every time you access the `request` object
 - compatible with pure [http server](http://nodejs.org/api/http.html#http_http_createserver_requestlistener), [express](https://github.com/strongloop/express), [connect](https://github.com/senchalabs/connect) and any http middleware system
+- uses standard [bunyan serializers](https://github.com/trentm/node-bunyan#serializers)
 
 ![screenshot](screenshot.png)
 
