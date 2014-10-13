@@ -1,3 +1,4 @@
+var bodyParser = require('body-parser');
 var bunyan = require('bunyan');
 var bunyanRequest = require('./');
 var http = require('http');
@@ -5,6 +6,7 @@ var request = require('supertest');
 var test = require('tape');
 var packageVersion = require('./package.json').version;
 
+var parseJson = bodyParser.json();
 var port;
 var userAgent = 'bunyan-request/' + packageVersion;
 
@@ -12,9 +14,11 @@ var logger;
 var requestLogger;
 
 var server = http.createServer(function serve(req, res) {
-  requestLogger(req, res, function next() {
-    req.log.info('Hello specialized!');
-    res.end('ok');
+  parseJson(req, res, function next() {
+    requestLogger(req, res, function next() {
+      req.log.info('Hello specialized!');
+      res.end('ok');
+    });
   });
 });
 
@@ -115,7 +119,7 @@ test('specifying `headerName`', function(t) {
 
 test('duration', function(t) {
   var output = [];
-  reset(output, {headerName: 'x-carrot-id'});
+  reset(output);
 
   t.plan(3);
 
@@ -128,6 +132,30 @@ test('duration', function(t) {
       t.error(err, 'received a response from server');
       t.equal(typeof responseLog.duration, 'number', '`duration` was set');
       t.ok(responseLog.duration >= 0, 'duration is >= 0');
+    });
+});
+
+test('request body', function(t) {
+  var output = [];
+  reset(output, {headerName: 'x-carrot-id'});
+
+  t.plan(2);
+
+  request
+    .post('/')
+    .send({
+      some: 'json',
+      data: 'already'
+    })
+    .expect(200)
+    .end(function gotResponse(err) {
+      var requestLog = output[0];
+
+      t.error(err, 'received a response from server');
+      t.deepEqual(requestLog.body, {
+        some: 'json',
+        data: 'already'
+      }, 'req.body was logged');
     });
 });
 
