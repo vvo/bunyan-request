@@ -4,7 +4,11 @@ module.exports = function logRequest(options) {
   var logger = options.logger;
   var headerName = options.headerName || 'x-request-id';
 
+  var includeRequestInEnd = options.includeRequestInEnd;
+
+  
   return function (req, res, next) {
+    
     var id = req.headers[headerName] || uuid.v4();
     var now = Date.now();
     var startOpts = {req: req};
@@ -23,7 +27,11 @@ module.exports = function logRequest(options) {
 
     req.log.info(startOpts, 'start request');
     res.on('finish', function responseSent() {
-      req.log.info({res: res, duration: Date.now() - now}, 'end request');
+      var endOpts = {res: res, duration: Date.now() - now};
+      if (includeRequestInEnd) {
+        endOpts["req"] = req;
+      }
+      req.log.info(endOpts, 'end request');
     });
 
     next();
