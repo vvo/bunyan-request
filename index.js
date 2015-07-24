@@ -22,8 +22,11 @@ module.exports = function logRequest(options) {
     res.setHeader(headerName, id);
 
     req.log.info(startOpts, 'start request');
+    
+    var time = process.hrtime();
     res.on('finish', function responseSent() {
-      req.log.info({res: res, duration: Date.now() - now}, 'end request');
+      var diff = process.hrtime(time);
+      req.log.info({res: res, duration: diff[0] * 1e3 + diff[1] * 1e-6}, 'end request');
     });
 
     next();
