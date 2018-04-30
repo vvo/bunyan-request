@@ -1,27 +1,29 @@
-var uuid = require('uuid');
+const uuid = require('uuid');
 
-module.exports = function logRequest(options) {
-  var logger = options.logger;
-  var headerName = options.headerName || 'x-request-id';
 
+module.exports = function logRequest({headerName='x-request-id', logger}={}) {
   return function (req, res, next) {
-    var id = req.headers[headerName] || uuid.v4();
-    var now = Date.now();
-    var startOpts = {req: req};
+    const id = req.headers[headerName] || uuid.v4();
 
-    req.log = logger.child({
+    const log = logger.child({
       type: 'request',
       id: id,
       serializers: logger.constructor.stdSerializers
     });
 
+    // Request
+    req.log = log
+
+    const startOpts = {req: req};
+
     if (req.body) {
       startOpts.body = req.body;
     }
 
-    res.setHeader(headerName, id);
+    log.info(startOpts, 'start request');
 
-    req.log.info(startOpts, 'start request');
+    // Response
+    res.setHeader(headerName, id);
 
     let res_body
     const res_send = res.send
@@ -32,16 +34,16 @@ module.exports = function logRequest(options) {
       res_send.call(res, body)
     }
 
-    var time = process.hrtime();
+    const time = process.hrtime();
     res.on('finish', function responseSent() {
-      var diff = process.hrtime(time);
+      const diff = process.hrtime(time);
       const endOpts = {res: res, duration: diff[0] * 1e3 + diff[1] * 1e-6}
 
       if (res_body !== undefined) {
         endOpts.body = res_body;
       }
 
-      req.log.info(endOpts, 'end request');
+      log.info(endOpts, 'end request');
     });
 
     next();
