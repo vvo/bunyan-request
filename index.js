@@ -22,11 +22,26 @@ module.exports = function logRequest(options) {
     res.setHeader(headerName, id);
 
     req.log.info(startOpts, 'start request');
-    
+
+    let res_body
+    const res_send = res.send
+    res.send = function(body)
+    {
+      res_body = body
+
+      res_send.call(res, body)
+    }
+
     var time = process.hrtime();
     res.on('finish', function responseSent() {
       var diff = process.hrtime(time);
-      req.log.info({res: res, duration: diff[0] * 1e3 + diff[1] * 1e-6}, 'end request');
+      const endOpts = {res: res, duration: diff[0] * 1e3 + diff[1] * 1e-6}
+
+      if (res_body !== undefined) {
+        endOpts.body = res_body;
+      }
+
+      req.log.info(endOpts, 'end request');
     });
 
     next();
