@@ -19,6 +19,9 @@ module.exports = function logRequest({headerName='x-request-id', logger}={}) {
     if (req.body) {
       startOpts.body = req.body;
     }
+    else if (req.text) {
+      startOpts.text = req.text;
+    }
 
     log.info(startOpts, 'start request');
 
