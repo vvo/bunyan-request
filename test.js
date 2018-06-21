@@ -59,7 +59,7 @@ test('request, response', function(t) {
           'user-agent': userAgent,
           'connection': 'close'
         },
-        remoteAddress: /^v0\.11/.test(process.version) ? '::ffff:127.0.0.1' : '127.0.0.1',
+        remoteAddress: '::ffff:127.0.0.1',
         remotePort: requestLog.req.remotePort
       }, 'request log have the right `req` property');
     });
