@@ -187,7 +187,7 @@ test('custom serializer', function(t) {
       t.error(err, 'received a response from server');
       t.deepEqual(requestLog.req, {
         customSerializer: true
-      }, 'req has custom serializer fields');
+      }, 'req has custom serializer');
     });
 });
 
