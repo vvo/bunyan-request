@@ -3,6 +3,7 @@ var uuid = require('uuid');
 module.exports = function logRequest(options) {
   var logger = options.logger;
   var headerName = options.headerName || 'x-request-id';
+  var serializers =   options.serializers || logger.constructor.stdSerializers;
 
   return function (req, res, next) {
     var id = req.headers[headerName] || uuid.v4();
@@ -12,7 +13,7 @@ module.exports = function logRequest(options) {
     req.log = logger.child({
       type: 'request',
       id: id,
-      serializers: logger.constructor.stdSerializers
+      serializers: serializers
     });
 
     if (req.body) {
