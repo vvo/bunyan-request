@@ -164,13 +164,11 @@ test('custom serializer', function(t) {
 
   var output = [];
 
-  const serializers = {
-    req (req) {
-      return ({ customSerializer: true });
-    }
+  function reqSerializer(req) {
+    return { customSerializer: true };
   }
   
-  reset(output, {serializers: serializers});
+  reset(output, {serializers: {req: reqSerializer}});
 
   t.plan(2);
 
