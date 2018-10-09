@@ -6,6 +6,7 @@ var request = require('supertest');
 var test = require('tape');
 var packageVersion = require('./package.json').version;
 
+
 var parseJson = bodyParser.json();
 var port;
 var userAgent = 'bunyan-request/' + packageVersion;
@@ -59,7 +60,7 @@ test('request, response', function(t) {
           'user-agent': userAgent,
           'connection': 'close'
         },
-        remoteAddress: /^v0\.11/.test(process.version) ? '::ffff:127.0.0.1' : '127.0.0.1',
+        remoteAddress: '::ffff:127.0.0.1',
         remotePort: requestLog.req.remotePort
       }, 'request log have the right `req` property');
     });
@@ -156,6 +157,35 @@ test('request body', function(t) {
         some: 'json',
         data: 'already'
       }, 'req.body was logged');
+    });
+});
+
+test('custom serializer', function(t) {
+
+  var output = [];
+
+  function reqSerializer(req) {
+    return { customSerializer: true };
+  }
+  
+  reset(output, {serializers: {req: reqSerializer}});
+
+  t.plan(2);
+
+  request
+    .post('/')
+    .send({
+      some: 'json',
+      data: 'already'
+    })
+    .expect(200)
+    .end(function gotResponse(err) {
+      var requestLog = output[0];
+
+      t.error(err, 'received a response from server');
+      t.deepEqual(requestLog.req, {
+        customSerializer: true
+      }, 'req has custom serializer');
     });
 });
 
